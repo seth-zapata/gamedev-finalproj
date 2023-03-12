@@ -10,6 +10,7 @@ public class BackgroundScroller : MonoBehaviour
     private void Start()
     {
         mat = GetComponent<Renderer>().material;
+        GetComponent<AudioSource>().Play();
     }
 
     void Update()

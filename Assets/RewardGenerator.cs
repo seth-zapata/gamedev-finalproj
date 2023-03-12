@@ -13,15 +13,31 @@ public class RewardGenerator : MonoBehaviour
     [SerializeField] private List<GameObject> RewardsClonesList;
 
     [SerializeField] public LayerMask layermask = 3;
+    [SerializeField] public Character character;
 
     void Start(){
+        character = GameObject.FindObjectOfType(typeof(Character)) as Character;
         generatePoints();
     }
 
     void actionMove(GameObject clone) {
-        clone.transform.Translate(direction * speed * Time.deltaTime);
+        if (!character.enemyHit) {
+            clone.transform.Translate(direction * speed * Time.deltaTime);
+        }
+    }
+
+    void ifGameOver(){
+        if (character.enemyHit){
+            speed = 0;
+            foreach (var clone in RewardsClonesList.ToArray()) {
+                if (clone != null) {
+                    clone.transform.Translate(direction * speed * Time.deltaTime);
+                }
+            }
+        }
     }
     void Update() {
+        ifGameOver();
         foreach (var clone in RewardsClonesList.ToArray()) {
             if (clone != null) {
                 if (clone.transform.position.x >= 650) {
@@ -40,8 +56,8 @@ public class RewardGenerator : MonoBehaviour
         StartCoroutine(generatePointsRoutine());
 
         IEnumerator generatePointsRoutine() {
-            Debug.Log("Start generating points!");
-            while(true) {
+            //Debug.Log("Start generating points!");
+            while(!character.enemyHit) {
                 yield return new WaitForSeconds(Random.Range((float) .75, (float) 1.75));
                 Vector2 RewardRandomPosition = new Vector2(-650f, Random.Range(-270f, 270f));
                 Collider2D CollisionWithReward = Physics2D.OverlapCircle(RewardRandomPosition, (float) 5.235947, LayerMask.GetMask("EnemyLayer"));
