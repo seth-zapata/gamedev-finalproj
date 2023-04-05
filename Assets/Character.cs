@@ -104,6 +104,6 @@ public class Character : MonoBehaviour
 
     IEnumerator waiter() {
         yield return new WaitForSeconds(2);
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("DeathScene");
     }
 }
