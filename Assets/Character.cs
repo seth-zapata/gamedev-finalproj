@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class Character : MonoBehaviour
@@ -22,6 +23,7 @@ public class Character : MonoBehaviour
     [SerializeField] private bool isDissolving;
     [SerializeField] private float fade;
     [SerializeField] public bool enemyHit;
+    [SerializeField] public bool gamePlayed;
 
 
     // Start is called before the first frame update
@@ -42,6 +44,7 @@ public class Character : MonoBehaviour
         isDissolving = false;
         fade = 1f;
         enemyHit = false;
+        gamePlayed = true;
 
 
     }
@@ -105,5 +108,6 @@ public class Character : MonoBehaviour
     IEnumerator waiter() {
         yield return new WaitForSeconds(2);
         SceneManager.LoadScene("DeathScene");
+        PlayerPrefs.SetInt("score", PlayerPrefs.GetInt("score") + scoreScript.return_score());
     }
 }

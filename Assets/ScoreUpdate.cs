@@ -6,11 +6,12 @@ using UnityEngine.UI;
 public class ScoreUpdate : MonoBehaviour
 {
 
-    [SerializeField] private GameObject scoreGameObject;
-    [SerializeField] private Text score;
-    [SerializeField] int scoreCount;
+    [SerializeField] public GameObject scoreGameObject;
+    [SerializeField] public Text score;
+    [SerializeField] public int scoreCount;
 
     void Start() {
+        scoreCount = 0;
         score.text = "Score: 0";
     }
 
@@ -25,5 +26,8 @@ public class ScoreUpdate : MonoBehaviour
     public void update_score() {
         scoreCount += 1;
         score.text = "Score:  " + scoreCount.ToString();
+    }
+    public int return_score() {
+        return scoreCount;
     }
 }

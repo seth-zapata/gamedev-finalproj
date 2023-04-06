@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class RewardScript : MonoBehaviour
-{
+{    
     public void OnContact(){
-        GetComponent<AudioSource>().Play();
+        AudioSource rewardAudio = GetComponent<AudioSource>();
+        rewardAudio.volume = .5f;
+        rewardAudio.Play();
     }
 }
