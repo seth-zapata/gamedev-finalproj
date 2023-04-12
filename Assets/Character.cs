@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Diagnostics;
+using System.Linq;
 
 public class Character : MonoBehaviour
 {
@@ -12,6 +14,7 @@ public class Character : MonoBehaviour
     [SerializeField] public ScoreUpdate scoreScript;
     [SerializeField] public BackgroundScroller backgroundScroller;
     [SerializeField] public RewardScript rewardScript;
+    [SerializeField] public DeathHandler deathScript;
 
     [SerializeField] private Vector2 boundScreen;
 
@@ -24,15 +27,19 @@ public class Character : MonoBehaviour
     [SerializeField] private float fade;
     [SerializeField] public bool enemyHit;
     [SerializeField] public bool gamePlayed;
-
+    [SerializeField] public Stopwatch timer;
+    [SerializeField] public IDictionary<string, int> individual_score_per_run = new Dictionary<string,int>();
 
     // Start is called before the first frame update
     void Start()
     {
+        timer = new Stopwatch();
+        timer.Start();
         //Debug.Log("Hello World!");
         scoreScript = GameObject.FindObjectOfType(typeof(ScoreUpdate)) as ScoreUpdate;
         backgroundScroller = GameObject.FindObjectOfType(typeof(BackgroundScroller)) as BackgroundScroller;
         rewardScript = GameObject.FindObjectOfType(typeof(RewardScript)) as RewardScript;
+        deathScript = GameObject.FindObjectOfType(typeof(DeathHandler)) as DeathHandler;
         mainCharBody = GetComponent<Rigidbody2D>();
 
         //mainCamera = FindObjectOfType<Camera>();
@@ -107,6 +114,16 @@ public class Character : MonoBehaviour
 
     IEnumerator waiter() {
         yield return new WaitForSeconds(2);
+        var time = timer.Elapsed;
+        PlayerPrefs.SetString("run_duration", time.ToString());
+        var dateTime = System.DateTime.Now.ToString("MM/dd/yyyy, HH:mm");
+        PlayerPrefs.SetString("run_datetime", dateTime);
+        PlayerPrefs.SetString("game_run", PlayerPrefs.GetString("game_run") + dateTime + " - " + scoreScript.return_score().ToString() + ";");
+        //individual_score_per_run.Add(dateTime, scoreScript.return_score());
+        //foreach(var entry in individual_score_per_run) {
+        //        UnityEngine.Debug.Log(entry.Key + " - " + entry.Value.ToString() + "\n");
+        //    }
+        //UnityEngine.Debug.Log(time);
         SceneManager.LoadScene("DeathScene");
         PlayerPrefs.SetInt("score", PlayerPrefs.GetInt("score") + scoreScript.return_score());
     }
