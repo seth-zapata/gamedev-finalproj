@@ -37,8 +37,8 @@ public class HistoryHandler : MonoBehaviour
         foreach(var item in dropdown_items) {
             var new_option = new Dropdown.OptionData();
             new_option.text = item;
-            dropdown = transform.parent.gameObject.GetComponent<Dropdown>();
-            //Debug.Log(dropdown);
+
+            dropdown = GameObject.Find("DropdownMenu").GetComponent<Dropdown>();
             dropdown.options.Add(new_option);
         }
         dropdown.onValueChanged.AddListener(delegate {DropdownItemSelected(dropdown);});
