@@ -5,16 +5,17 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Diagnostics;
 using System.Linq;
+using UnityEngine.InputSystem;
 
 public class Character : MonoBehaviour
 {
     [SerializeField] private float speed = 30.0f;
-
-
+    [SerializeField] private InputActionReference movement;
     [SerializeField] public ScoreUpdate scoreScript;
     [SerializeField] public BackgroundScroller backgroundScroller;
     [SerializeField] public RewardScript rewardScript;
     [SerializeField] public DeathHandler deathScript;
+    [SerializeField] public PauseMenu pauseScript;
 
     [SerializeField] private Vector2 boundScreen;
 
@@ -35,14 +36,15 @@ public class Character : MonoBehaviour
     {
         timer = new Stopwatch();
         timer.Start();
+        Time.timeScale = 1f;
         //Debug.Log("Hello World!");
         scoreScript = GameObject.FindObjectOfType(typeof(ScoreUpdate)) as ScoreUpdate;
         backgroundScroller = GameObject.FindObjectOfType(typeof(BackgroundScroller)) as BackgroundScroller;
         rewardScript = GameObject.FindObjectOfType(typeof(RewardScript)) as RewardScript;
         deathScript = GameObject.FindObjectOfType(typeof(DeathHandler)) as DeathHandler;
+        pauseScript = GameObject.FindObjectOfType(typeof(PauseMenu)) as PauseMenu;
         mainCharBody = GetComponent<Rigidbody2D>();
 
-        //mainCamera = FindObjectOfType<Camera>();
         boundScreen = Camera.main.ScreenToWorldPoint(new Vector3(0,Screen.height,0));
         characterWidth = transform.GetComponent<SpriteRenderer>().bounds.size.x / 2;
         characterHeight = transform.GetComponent<SpriteRenderer>().bounds.size.y / 2;
@@ -66,7 +68,6 @@ public class Character : MonoBehaviour
         if (isDissolving) {
             backgroundScroller.Speed = 0;
             backgroundScroller.GetComponent<AudioSource>().Stop();
-            //Debug.Log("Dissolving...");
             fade -= Time.deltaTime;
             if (fade <= 0f) {
                 fade = 0f;
@@ -84,10 +85,14 @@ public class Character : MonoBehaviour
             currentPosition.y = -(boundScreen.y - characterHeight);
             transform.position = currentPosition;
         }
+
+        if (pauseScript.isGamePaused) {
+
+        }
     }
     void FixedUpdate(){
         if (!enemyHit) {
-            mainCharBody.MovePosition(transform.position + (new Vector3(0, Input.GetAxisRaw("Vertical")) * Time.fixedDeltaTime * speed));
+            mainCharBody.MovePosition(transform.position + (movement.action.ReadValue<Vector3>() * Time.fixedDeltaTime * speed));
         }
     }
 
@@ -110,6 +115,15 @@ public class Character : MonoBehaviour
         Collider2D ObjectCollider = other.GetComponent<Collider2D>();
         SpriteRender.enabled = false;
         ObjectCollider.enabled = false;
+    }
+
+    public void saveGame(){
+        var time = timer.Elapsed;
+        PlayerPrefs.SetString("run_duration", time.ToString());
+        var dateTime = System.DateTime.Now.ToString("MM/dd/yyyy, HH:mm");
+        PlayerPrefs.SetString("run_datetime", dateTime);
+        PlayerPrefs.SetString("game_run", PlayerPrefs.GetString("game_run") + dateTime + " - " + scoreScript.return_score().ToString() + ";");
+        PlayerPrefs.SetInt("score", PlayerPrefs.GetInt("score") + scoreScript.return_score());
     }
 
     IEnumerator waiter() {

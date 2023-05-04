@@ -23,12 +23,33 @@ public class MainMenuHandler : MonoBehaviour
                 PlayerPrefs.SetString(elem, "");
             }
         }
+        if (!PlayerPrefs.HasKey("GeneralVolumeValue")) {
+            PlayerPrefs.SetFloat("GeneralVolumeValue", 0);
+            //Debug.Log("set volume to 0 in mainmenu");
+        }
+        if (!PlayerPrefs.HasKey("EffectsVolumeValue")) {
+            PlayerPrefs.SetFloat("EffectsVolumeValue", 0);
+            //Debug.Log("set volume to 0 in mainmenu");
+        }
+        if (!PlayerPrefs.HasKey("UpRebind")) {
+            PlayerPrefs.SetString("UpRebind", "W");
+        }
+        if (!PlayerPrefs.HasKey("DownRebind")) {
+            PlayerPrefs.SetString("DownRebind", "S");
+        }
+        if (!PlayerPrefs.HasKey("PauseRebind")) {
+            PlayerPrefs.SetString("PauseRebind", "Esc");
+        }
     }
     public void StartGame()
     {
         SceneManager.LoadScene("GameScene");
     }
 
+    public void AdjustSettings()
+    {
+        SceneManager.LoadScene("AdjustSettings");
+    }
     public void History() {
         SceneManager.LoadScene("History");
     }

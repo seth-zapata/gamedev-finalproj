@@ -13,11 +13,9 @@ public class HistoryHandler : MonoBehaviour
 
         charScript = GameObject.FindObjectOfType(typeof(Character)) as Character;
         dropdown_items = new List<string>();
-        Debug.Log("periodt1");
         if (System.String.Equals(PlayerPrefs.GetString("run_duration"),"false")){
             dropdown_items.Add("No games played yet!");
         } else {
-            Debug.Log("periodt2");
             var tempString = "";
             for (int i = 0; i < PlayerPrefs.GetString("game_run").Length; i++) {
                 //Debug.Log("periodtloop");
@@ -33,7 +31,6 @@ public class HistoryHandler : MonoBehaviour
             //Debug.Log("true time " + PlayerPrefs.GetString("run_duration"));
             //Debug.Log(PlayerPrefs.GetString("run_duration").Substring(3, 8));
         }
-        Debug.Log("periodt3");
         foreach(var item in dropdown_items) {
             var new_option = new Dropdown.OptionData();
             new_option.text = item;

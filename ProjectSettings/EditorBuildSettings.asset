@@ -20,4 +20,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Store.unity
     guid: c8d6e6e30f69a1646919338ef2dbcd90
+  - enabled: 1
+    path: Assets/Scenes/AdjustSettings.unity
+    guid: ebda41ba9dd877f4faa7539560ff59af
+  - enabled: 1
+    path: Assets/Scenes/KeyRebind.unity
+    guid: 16b02d4eea7d3b844a99134c85368d5d
   m_configObjects: {}
